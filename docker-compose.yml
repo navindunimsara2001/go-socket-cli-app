@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chat-server
+    ports:
+      - "8080:8080"
+    networks:
+      - chatnet
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: chat-client
+    stdin_open: true
+    tty: true
+    networks:
+      - chatnet
+    depends_on:
+      - server
+    # override host to connect to server container
+    command: ["./chat-client"]
+
+networks:
+  chatnet:
